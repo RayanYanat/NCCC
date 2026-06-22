@@ -39,8 +39,12 @@ export default function RegionHero({ region }: { region: Region }) {
       {/* Accent hairline */}
       <div className="absolute top-0 left-0 right-0 h-[3px] z-30" style={{ backgroundColor: region.accent }} />
 
-      {/* Image */}
-      <div className="rh-media absolute inset-0" style={{ backgroundColor: "#14100C" }}>
+      {/* Image — opacity:0 set inline (not just via CSS) so it's hidden at the
+          React render level too. On client-side navigation from the selector the
+          external stylesheet timing can let the photo paint for a frame before
+          the entrance runs; an inline initial state closes that gap. GSAP fades
+          it to 1 as the first beat of the timeline. */}
+      <div className="rh-media absolute inset-0" style={{ backgroundColor: "#14100C", opacity: 0 }}>
         <Image src={region.heroImage} alt={`${region.country} — ${region.entity}`} fill priority placeholder="blur" blurDataURL={HERO_BLUR[region.id]} className="rh-photo object-cover will-change-transform" sizes="100vw" />
         <div className="absolute inset-0" style={{ background: "linear-gradient(100deg, rgba(16,12,9,0.85) 0%, rgba(16,12,9,0.6) 40%, rgba(16,12,9,0.2) 72%, rgba(16,12,9,0.35) 100%)" }} />
         <div className="absolute bottom-0 left-0 right-0 h-72" style={{ background: "linear-gradient(to top, rgba(14,11,8,0.85) 0%, transparent 100%)" }} />
