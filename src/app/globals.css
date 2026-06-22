@@ -1,0 +1,301 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* Typography */
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains);
+  --font-heading: var(--font-fraunces);
+
+  /* Brand Colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: var(--brand);
+  --color-brand-dim: var(--brand-dim);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border-subtle: var(--border-subtle);
+  --color-text-muted: var(--text-muted);
+
+  /* shadcn tokens */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+:root {
+  /* ── HVAC editorial palette — warm light ──────────────────────────
+     Base bone/oatmeal, warm charcoal ink, ember (heating) + slate-teal
+     (cooling) as the signature hot/cold duality. */
+  --background:        #F4EEE4;   /* warm bone — deepened so white cards lift off it */
+  --foreground:        #1C1A17;   /* warm charcoal ink */
+  --brand:             #C8511F;   /* ember / terracotta — HEATING */
+  --brand-dim:         #A23F14;   /* deeper ember — hover */
+  --brand-bright:      #E2611E;   /* brighter ember — accents */
+  --cool:              #2B6E8F;   /* slate teal-blue — COOLING */
+  --cool-deep:         #1F5067;
+  --surface:           #FFFEFC;   /* near-white card — warm white */
+  --surface-warm:      #ECE3D6;   /* warm panel for alternating bands */
+  --surface-elevated:  #FFFEFC;
+  --border-subtle:     rgba(28, 26, 23, 0.08);
+  --border-strong:     rgba(28, 26, 23, 0.16);
+  --text-muted:        #6B6459;   /* warm muted gray */
+  --text-faint:        #9A9286;
+
+  /* shadcn compatibility — light */
+  --card:              #FFFFFF;
+  --card-foreground:   #1C1A17;
+  --popover:           #FFFFFF;
+  --popover-foreground:#1C1A17;
+  --primary:           #C8511F;
+  --primary-foreground:#FFFFFF;
+  --secondary:         #F2ECE3;
+  --secondary-foreground: #1C1A17;
+  --muted:             #F2ECE3;
+  --muted-foreground:  #6B6459;
+  --accent:            #C8511F;
+  --accent-foreground: #FFFFFF;
+  --destructive:       oklch(0.577 0.245 27.325);
+  --border:            rgba(28, 26, 23, 0.10);
+  --input:             rgba(28, 26, 23, 0.14);
+  --ring:              #C8511F;
+  --radius:            0.6rem;
+}
+
+/* ── Lenis smooth scroll ─────────────────────────────────────────────────── */
+html.lenis,
+html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+  }
+
+  html {
+    background-color: #F4EEE4;
+    scroll-behavior: smooth;
+    /* Offset anchor-link targets so they don't hide under the fixed navbar.
+       Mobile navbar = h-16 (64px), desktop = h-20 (80px). */
+    scroll-padding-top: 4.5rem; /* 72px — mobile */
+  }
+
+  @media (min-width: 1024px) {
+    html {
+      scroll-padding-top: 5.5rem; /* 88px — desktop */
+    }
+  }
+
+  body {
+    background-color: #F4EEE4;
+    color: #1C1A17;
+    font-family: var(--font-inter), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Warm ember text selection — a small premium tell */
+  ::selection { background-color: rgba(200, 81, 31, 0.18); color: #1C1A17; }
+
+  /* Tabular figures for stats/data so numbers align crisply */
+  .font-data, .tabular { font-variant-numeric: tabular-nums; }
+
+  /* Whisper of paper grain over the whole page — kills the flat "digital"
+     feel and gives the warm editorial surface real material. Fixed overlay
+     above content (multiply), below the navbar/banner. Never interactive.
+     Tuned very low so it reads as texture, not noise. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  }
+
+  /* Editorial serif headings — warm, premium, sentence-cased by content.
+     No more uppercase condensed. */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-fraunces), Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.04;
+  }
+
+  /* Data / metric displays */
+  .font-data {
+    font-family: var(--font-jetbrains), monospace;
+  }
+}
+
+/* ── Locked screen initial states ───────────────────────────────────────────
+ * Same FOUC-prevention pattern as hero classes below.
+ * Elements are hidden via CSS so SSR HTML is already invisible before JS loads.
+ * ─────────────────────────────────────────────────────────────────────────── */
+.ls-bracket,
+.ls-badge,
+.ls-mark,
+.ls-sub,
+.ls-strip  { opacity: 0; }
+.ls-title-1,
+.ls-title-2 { clip-path: inset(0% 100% 0% 0%); }
+.ls-divider  { transform: scaleX(0); transform-origin: left center; }
+
+/* ── Hero initial states ─────────────────────────────────────────────────────
+ * These classes are hidden via CSS so the SSR HTML already has them invisible
+ * before any JavaScript loads. This eliminates the FOUC (flash of visible
+ * content) on first load when the JS bundle is not yet cached.
+ * GSAP's gsap.to() overrides these rules when it animates them into view.
+ * Without this, elements flash visible for ~300ms while the bundle downloads.
+ * ─────────────────────────────────────────────────────────────────────────── */
+.hero-badge,
+.hero-title-1,
+.hero-title-2,
+.hero-title-3,
+.hero-divider,
+.hero-sub,
+.hero-cta,
+.hero-scroll,
+.hero-data-strip,
+.hero-frame,
+.hero-rightbar {
+  opacity: 0;
+}
+
+/* Hero photo starts pre-zoomed at the SAME scale GSAP animates FROM (1.18),
+   so the cinematic zoom never "snaps" when JS takes over — smooth launch. */
+.hero-photo {
+  transform: scale(1.18);
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-photo { transform: none; }
+}
+
+/* ── Mobile atmospheric blob overrides ──────────────────────────────────────
+ * On smaller screens the 3 hero glows (2 side columns + 1 central) are too
+ * heavy. Suppress the side columns entirely and freeze the central blob
+ * (no breathe animation, halved opacity). The !important overrides both the
+ * Tailwind opacity utility class and the inline animation property.
+ * ─────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  /* Corner brackets + rightbar — display:none beats any GSAP inline opacity */
+  .hero-frame    { display: none !important; }
+  .hero-rightbar { display: none !important; }
+
+  /* Atmospheric blobs — fully suppressed on mobile */
+  .hero-atmo-side    { display: none !important; }
+  .hero-atmo-central { display: none !important; }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1);    opacity: 1; }
+  50%       { transform: scale(1.12); opacity: 0.75; }
+}
+
+@keyframes float-data {
+  0%, 100% { transform: translateY(0px);   opacity: var(--d-op, 0.055); }
+  33%       { transform: translateY(-10px); opacity: calc(var(--d-op, 0.055) * 1.6); }
+  66%       { transform: translateY(-4px);  opacity: calc(var(--d-op, 0.055) * 0.7); }
+}
+
+@keyframes grain {
+  0%   { background-position:   0%   0%; }
+  10%  { background-position:  -5%  -10%; }
+  20%  { background-position: -15%   5%; }
+  30%  { background-position:   7% -25%; }
+  40%  { background-position:  -5%  25%; }
+  50%  { background-position: -15%  10%; }
+  60%  { background-position:  15%   0%; }
+  70%  { background-position:   0%  15%; }
+  80%  { background-position:   3%  35%; }
+  90%  { background-position: -10%  10%; }
+}
+
+@layer utilities {
+  .text-brand          { color: #C8511F; }
+  .text-cool           { color: #2B6E8F; }
+  .bg-bone             { background-color: #FAF7F2; }
+  .bg-surface          { background-color: #FFFFFF; }
+  .bg-surface-warm     { background-color: #F2ECE3; }
+  .bg-surface-elevated { background-color: #FFFFFF; }
+  .border-subtle       { border-color: rgba(28, 26, 23, 0.10); }
+
+  /* Editorial serif accent — for the rare italic display moment */
+  .font-display { font-family: var(--font-fraunces), Georgia, serif; }
+
+  /* Soft warm elevation — replaces the old neon glows.
+     Premium = restraint: a quiet lift, not a glow. */
+  .shadow-soft {
+    box-shadow: 0 1px 1px rgba(74, 49, 28, 0.05),
+                0 6px 16px rgba(74, 49, 28, 0.07),
+                0 14px 38px rgba(74, 49, 28, 0.07);
+  }
+  .shadow-card {
+    box-shadow: 0 2px 4px rgba(74, 49, 28, 0.06),
+                0 12px 28px rgba(74, 49, 28, 0.10),
+                0 30px 60px rgba(74, 49, 28, 0.12);
+  }
+  /* Kept for back-compat with components still referencing it during migration */
+  .glow-brand {
+    box-shadow: 0 6px 20px rgba(200, 81, 31, 0.28);
+  }
+
+  /* Micro-interaction helpers */
+  .lift {
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .lift:hover { transform: translateY(-3px); }
+
+  .press { transition: transform 0.18s ease; }
+  .press:active { transform: scale(0.975); }
+
+  /* Animated link underline that draws left → right on hover */
+  .underline-grow {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    transition: background-size 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .underline-grow:hover { background-size: 100% 1px; }
+
+  /* Section spacing */
+  .section-padding {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+
+  @media (min-width: 1024px) {
+    .section-padding {
+      padding-top: 8rem;
+      padding-bottom: 8rem;
+    }
+  }
+}
