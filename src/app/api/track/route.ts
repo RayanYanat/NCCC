@@ -80,9 +80,13 @@ export async function POST(req: NextRequest) {
       } catch {}
     }
 
-    /* ── Slack: only ping for a real, engaged human ───────────────────── */
+    /* ── Slack: ping once when a real human OPENS the demo ─────────────────
+       Fires on the "open" phase (not "engaged") so you hear about it the moment
+       they land — that's what "did they open my site" means. Scanners are
+       filtered out above, so an email-gateway detonation never pings. The
+       "engaged" phase is still stored in Supabase as a deeper-interest signal. */
     const slackUrl = process.env.SLACK_WEBHOOK_URL;
-    if (slackUrl && !isScanner && phase === "engaged") {
+    if (slackUrl && !isScanner && phase === "open") {
       const where = PAGE_LABEL[page] ?? page;
       const device = isMobile ? "📱 Mobile" : "🖥️ Desktop";
       try {
@@ -92,7 +96,7 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             blocks: [{
               type: "section",
-              text: { type: "mrkdwn", text: `👀 Someone is viewing *${where}* of the NCCC demo\n📍 ${location}  ·  ${device}` },
+              text: { type: "mrkdwn", text: `👀 Someone opened *${where}* of the NCCC demo\n📍 ${location}  ·  ${device}` },
             }],
           }),
         });

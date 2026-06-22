@@ -7,6 +7,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ArrowRight } from "lucide-react";
 import { REGION_LIST, GROUP } from "@/lib/regions";
+import { HERO_BLUR } from "@/lib/blur";
 
 /**
  * The signature landing experience: a full-screen, three-panel region selector.
@@ -125,13 +126,16 @@ export default function RegionSelector() {
                 filter: isDimmed ? "saturate(0.7)" : "none",
               }}
             >
-              {/* Image */}
+              {/* Image — all three are above the fold, so load eagerly with a
+                  blur placeholder for a smooth fade-in (no pop). */}
               <Image
                 src={region.heroImage}
                 alt={`${region.country} — ${region.entity}`}
                 fill
-                priority={i === 0}
-                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+                placeholder="blur"
+                blurDataURL={HERO_BLUR[region.id]}
+                sizes="(max-width: 1024px) 100vw, 34vw"
                 className="rs-img object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
                 style={{ transform: isHovered ? "scale(1.06)" : "scale(1.0)" }}
               />

@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ArrowRight, MapPin } from "lucide-react";
 import type { Region } from "@/lib/regions";
+import { HERO_BLUR } from "@/lib/blur";
 
 export default function RegionHero({ region }: { region: Region }) {
   const ref = useRef<HTMLElement>(null);
@@ -38,7 +39,7 @@ export default function RegionHero({ region }: { region: Region }) {
 
       {/* Image */}
       <div className="absolute inset-0" style={{ backgroundColor: "#14100C" }}>
-        <Image src={region.heroImage} alt={`${region.country} — ${region.entity}`} fill priority className="rh-photo object-cover will-change-transform" sizes="100vw" />
+        <Image src={region.heroImage} alt={`${region.country} — ${region.entity}`} fill priority placeholder="blur" blurDataURL={HERO_BLUR[region.id]} className="rh-photo object-cover will-change-transform" sizes="100vw" />
         <div className="absolute inset-0" style={{ background: "linear-gradient(100deg, rgba(16,12,9,0.85) 0%, rgba(16,12,9,0.6) 40%, rgba(16,12,9,0.2) 72%, rgba(16,12,9,0.35) 100%)" }} />
         <div className="absolute bottom-0 left-0 right-0 h-72" style={{ background: "linear-gradient(to top, rgba(14,11,8,0.85) 0%, transparent 100%)" }} />
       </div>
