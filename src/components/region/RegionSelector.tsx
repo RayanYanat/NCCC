@@ -29,10 +29,11 @@ export default function RegionSelector() {
     () => {
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (reduce) {
-        gsap.set([".rs-header", ".rs-panel", ".rs-footer"], { opacity: 1, y: 0, clipPath: "none" });
+        gsap.set([".rs-header", ".rs-panel", ".rs-panel-inner", ".rs-footer"], { opacity: 1, y: 0, clipPath: "none" });
         return;
       }
       gsap.set(".rs-panel", { clipPath: "inset(100% 0% 0% 0%)" });
+      gsap.set(".rs-panel-inner", { opacity: 0, y: 20 });
       gsap.set([".rs-header", ".rs-footer"], { opacity: 0, y: 16 });
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
@@ -161,7 +162,7 @@ export default function RegionSelector() {
               )}
 
               {/* Content */}
-              <div className="rs-panel-inner absolute inset-0 z-10 flex flex-col justify-end p-7 lg:p-10" style={{ opacity: 0, transform: "translateY(20px)" }}>
+              <div className="rs-panel-inner absolute inset-0 z-10 flex flex-col justify-end p-7 lg:p-10">
                 {/* Index + flag */}
                 <div className="flex items-center gap-3 mb-4">
                   <span className="font-data text-[11px] tracking-[0.2em]" style={{ color: "rgba(245,240,233,0.6)" }}>

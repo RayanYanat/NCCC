@@ -197,6 +197,30 @@ html.lenis body { height: auto; }
   .hero-photo { transform: none; }
 }
 
+/* ── Region selector initial states (FOUC prevention) ────────────────────────
+ * The landing's GSAP entrance sets these hidden in JS, but JS runs AFTER the
+ * first paint — so for one frame the panels flash fully visible ("pop") before
+ * the animation starts. Baking the initial state into CSS means the SSR HTML
+ * is already hidden on first paint; GSAP then reveals it. No pop.
+ * ─────────────────────────────────────────────────────────────────────────── */
+.rs-panel        { clip-path: inset(100% 0% 0% 0%); }
+.rs-panel-inner  { opacity: 0; transform: translateY(20px); }
+.rs-header,
+.rs-footer       { opacity: 0; }
+
+/* Region hero (regional pages) — same pre-hidden pattern. */
+.rh-eyebrow, .rh-sub, .rh-cta, .rh-strip,
+.rh-t1, .rh-t2   { opacity: 0; }
+.rh-photo        { transform: scale(1.16); will-change: transform; }
+
+/* Reduced motion / no-JS safety: never leave content stuck invisible. */
+@media (prefers-reduced-motion: reduce) {
+  .rs-panel { clip-path: none; }
+  .rs-panel-inner, .rs-header, .rs-footer,
+  .rh-eyebrow, .rh-sub, .rh-cta, .rh-strip, .rh-t1, .rh-t2 { opacity: 1; }
+  .rs-panel-inner, .rh-photo { transform: none; }
+}
+
 /* ── Mobile atmospheric blob overrides ──────────────────────────────────────
  * On smaller screens the 3 hero glows (2 side columns + 1 central) are too
  * heavy. Suppress the side columns entirely and freeze the central blob
