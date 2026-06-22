@@ -50,13 +50,19 @@ export async function POST(req: NextRequest) {
       } catch {}
     }
 
-    /* ── Classify: scanner vs human ───────────────────────────────────── */
+    /* ── Classify ──────────────────────────────────────────────────────────
+       We filter scanners by BEHAVIOUR (the engagement gate on the client),
+       not by IP. The old datacenter/hosting/org checks also flagged real
+       visitors on corporate or VPN networks (Zscaler, Netskope, office IPs) —
+       exactly the prospect we most want to hear about. So hosting/org are
+       recorded for context but never block the ping. Only obvious automation
+       (declared bot UA, headless/webdriver) is treated as non-human. */
     const uaBot = UA_BOT.test(ua) || ua.trim() === "";
     const clientBot = signals.wd === true || (signals.langs === 0 && (signals.cores ?? 0) === 0);
     const dcOrg = ORG_DC.test(org);
-    const isScanner = uaBot || clientBot || hosting || dcOrg;
-    const reason = uaBot ? "UA" : (hosting || dcOrg) ? "datacenter" : clientBot ? "automation" : "";
-    const kind = isScanner ? "scanner" : phase;
+    const isAutomation = uaBot || clientBot;
+    const reason = uaBot ? "UA" : clientBot ? "automation" : (hosting || dcOrg) ? "datacenter" : "";
+    const kind = isAutomation ? "automation" : phase;
 
     const location = [city, regionName, country].filter(Boolean).join(", ") || "Unknown";
     const isMobile = /mobile|android|iphone|ipad/i.test(ua);
@@ -80,13 +86,13 @@ export async function POST(req: NextRequest) {
       } catch {}
     }
 
-    /* ── Slack: ping once when a real human OPENS the demo ─────────────────
-       Fires on the "open" phase (not "engaged") so you hear about it the moment
-       they land — that's what "did they open my site" means. Scanners are
-       filtered out above, so an email-gateway detonation never pings. The
-       "engaged" phase is still stored in Supabase as a deeper-interest signal. */
+    /* ── Slack: ping when a real human ENGAGES with the demo ───────────────
+       "engaged" only fires after genuine foreground dwell + interaction, which
+       an email-gateway scanner (load-and-leave) never does — so this is the
+       behavioural filter that replaces the fragile IP check. Works regardless
+       of the visitor's network, so a prospect on a corporate/VPN IP still pings. */
     const slackUrl = process.env.SLACK_WEBHOOK_URL;
-    if (slackUrl && !isScanner && phase === "open") {
+    if (slackUrl && !isAutomation && phase === "engaged") {
       const where = PAGE_LABEL[page] ?? page;
       const device = isMobile ? "📱 Mobile" : "🖥️ Desktop";
       try {
@@ -96,7 +102,7 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             blocks: [{
               type: "section",
-              text: { type: "mrkdwn", text: `👀 Someone opened *${where}* of the NCCC demo\n📍 ${location}  ·  ${device}` },
+              text: { type: "mrkdwn", text: `👀 Someone is viewing *${where}* of the NCCC demo\n📍 ${location}  ·  ${device}` },
             }],
           }),
         });
