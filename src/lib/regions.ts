@@ -113,7 +113,7 @@ export const REGIONS: Record<RegionId, Region> = {
     ],
     clients: ["E.L. Construction", "Greystar", "BZT", "Triconde", "MCD Construction"],
     leadership: [
-      { name: "Areful Islam", role: "Director, US Operations", bio: "IIT graduate with an EPGM from MIT, Boston. 25 years bringing NCCC's industrial expertise to the US market." },
+      { name: "Arizul Islam", role: "Director, US Operations", bio: "Mechanical engineer and industrial coatings & linings specialist, leading NCCC's delivery across the United States and the Middle East." },
     ],
     contact: {
       email: "us@onenccc.com",
