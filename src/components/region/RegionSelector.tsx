@@ -51,8 +51,12 @@ export default function RegionSelector() {
       if (leaving) return;
       setLeaving(true);
 
+      // One-shot flag the incoming region page reads to continue the veil.
+      const flag = () => { try { sessionStorage.setItem("nccc-transition", "1"); } catch {} };
+
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (reduce) {
+        flag();
         router.push(href);
         return;
       }
@@ -63,13 +67,16 @@ export default function RegionSelector() {
 
       const tl = gsap.timeline({
         defaults: { ease: "power3.inOut" },
-        onComplete: () => router.push(href),
+        onComplete: () => { flag(); router.push(href); },
       });
       tl.to([".rs-header", ".rs-footer"], { opacity: 0, y: -10, duration: 0.35 }, 0)
         .to(others, { flexGrow: 0, opacity: 0, duration: 0.6 }, 0)
         .to(chosen, { flexGrow: 12, duration: 0.7 }, 0)
         .to(chosen.querySelector(".rs-img"), { scale: 1.08, duration: 0.9 }, 0)
-        .to(chosen.querySelector(".rs-scrim"), { opacity: 0.35, duration: 0.7 }, 0);
+        .to(chosen.querySelector(".rs-scrim"), { opacity: 0.35, duration: 0.7 }, 0)
+        // Veil closes over the expanding panel just before we navigate, so the
+        // photo never lingers into the next route.
+        .to(".rs-veil", { opacity: 1, duration: 0.4, ease: "power2.in" }, 0.45);
     },
     [leaving, router]
   );
@@ -229,6 +236,10 @@ export default function RegionSelector() {
           {GROUP.descriptor.split(" operating")[0]}
         </p>
       </footer>
+
+      {/* Transition veil — fades in over the chosen panel just before we navigate,
+          then the incoming region page continues the same veil and dissolves it. */}
+      <div className="rs-veil fixed inset-0 z-[60] pointer-events-none" style={{ backgroundColor: "#14100C", opacity: 0 }} aria-hidden />
     </div>
   );
 }

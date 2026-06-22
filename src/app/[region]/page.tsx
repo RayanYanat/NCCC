@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { getRegion, REGION_ORDER, GROUP } from "@/lib/regions";
 import GSAPConfig from "@/components/shared/GSAPConfig";
 import VisitTracker from "@/components/shared/VisitTracker";
+import PageReveal from "@/components/region/PageReveal";
 import RegionNav from "@/components/region/RegionNav";
 import RegionFooter from "@/components/region/RegionFooter";
 import RegionHero from "@/sections/region/RegionHero";
@@ -46,6 +47,7 @@ export default async function RegionPage({
 
   return (
     <>
+      <PageReveal />
       <VisitTracker page={region.id} />
       <RegionNav region={region} />
       <main style={{ position: "relative", zIndex: 1 }}>
