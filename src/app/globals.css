@@ -209,6 +209,7 @@ html.lenis body { height: auto; }
 .rs-footer       { opacity: 0; }
 
 /* Region hero (regional pages) — same pre-hidden pattern. */
+.rh-media        { opacity: 0; }
 .rh-eyebrow, .rh-sub, .rh-cta, .rh-strip,
 .rh-t1, .rh-t2   { opacity: 0; }
 .rh-photo        { transform: scale(1.16); will-change: transform; }
@@ -217,7 +218,7 @@ html.lenis body { height: auto; }
 @media (prefers-reduced-motion: reduce) {
   .rs-panel { clip-path: none; }
   .rs-panel-inner, .rs-header, .rs-footer,
-  .rh-eyebrow, .rh-sub, .rh-cta, .rh-strip, .rh-t1, .rh-t2 { opacity: 1; }
+  .rh-media, .rh-eyebrow, .rh-sub, .rh-cta, .rh-strip, .rh-t1, .rh-t2 { opacity: 1; }
   .rs-panel-inner, .rh-photo { transform: none; }
 }
 

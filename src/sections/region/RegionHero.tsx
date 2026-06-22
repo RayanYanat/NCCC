@@ -18,7 +18,9 @@ export default function RegionHero({ region }: { region: Region }) {
       gsap.set([".rh-t1", ".rh-t2"], { y: 32, opacity: 0 });
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      tl.to(".rh-eyebrow", { y: 0, opacity: 1, duration: 0.7 }, 0.2)
+      // Reveal the photo first (fades up from the dark section bg), then the copy.
+      tl.to(".rh-media", { opacity: 1, duration: 1.1, ease: "power2.out" }, 0)
+        .to(".rh-eyebrow", { y: 0, opacity: 1, duration: 0.7 }, 0.4)
         .to(".rh-t1", { y: 0, opacity: 1, duration: 1.0 }, "-=0.4")
         .to(".rh-t2", { y: 0, opacity: 1, duration: 1.0 }, "-=0.8")
         .to(".rh-sub", { y: 0, opacity: 1, duration: 0.7 }, "-=0.55")
@@ -38,7 +40,7 @@ export default function RegionHero({ region }: { region: Region }) {
       <div className="absolute top-0 left-0 right-0 h-[3px] z-30" style={{ backgroundColor: region.accent }} />
 
       {/* Image */}
-      <div className="absolute inset-0" style={{ backgroundColor: "#14100C" }}>
+      <div className="rh-media absolute inset-0" style={{ backgroundColor: "#14100C" }}>
         <Image src={region.heroImage} alt={`${region.country} — ${region.entity}`} fill priority placeholder="blur" blurDataURL={HERO_BLUR[region.id]} className="rh-photo object-cover will-change-transform" sizes="100vw" />
         <div className="absolute inset-0" style={{ background: "linear-gradient(100deg, rgba(16,12,9,0.85) 0%, rgba(16,12,9,0.6) 40%, rgba(16,12,9,0.2) 72%, rgba(16,12,9,0.35) 100%)" }} />
         <div className="absolute bottom-0 left-0 right-0 h-72" style={{ background: "linear-gradient(to top, rgba(14,11,8,0.85) 0%, transparent 100%)" }} />
